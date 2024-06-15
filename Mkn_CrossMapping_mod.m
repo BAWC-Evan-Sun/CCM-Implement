@@ -11,11 +11,15 @@ function cr = Mkn_CrossMapping_mod(Data, tau, E, rgns)
 %                conditioning on all other columns. 
 %
 % Outputs: cr  - causality ratios, which is the conditional cCCM value.
-
+    
     N0 = 10; % In this function, we set N0 = 10. This could be adjusted at the user's convenience
     
     n_ts = size(Data, 2);
     n_pts = size(Data, 1);
+
+    if n_ts >= n_pts
+        error("Wrong Dimension for Data")
+    end
     nrgns = size(rgns, 1);
 
     cr = zeros(2, nrgns);
@@ -51,6 +55,12 @@ function cr = Mkn_CrossMapping_mod(Data, tau, E, rgns)
 
         Xests = (squeeze(ests_all(cond_idx, i, :)));
         Yests = (squeeze(ests_all(cond_idx, j, :)));
+        if size(Xests,2) > size(Xests,1)
+            Xests = Xests';
+        end
+        if size(Yests,2) > size(Yests,1)
+            Yests = Yests';
+        end
         XestY = (squeeze(ests_all(j, i, :)));
         YestX = (squeeze(ests_all(i, j, :)));
         XT = X(T+N0-1:end);
